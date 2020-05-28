@@ -5,20 +5,6 @@ import androidx.lifecycle.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 
-// Temporary fix for LiveData.map but (currently breaks Nullability)
-// https://issuetracker.google.com/issues/132923666
-@Deprecated("Use Transformations.map instead")
-inline fun <X, Y> LiveData<X>.map(
-    crossinline transform: (X?) -> Y
-): LiveData<Y> = Transformations.map(this) { transform(it) }
-
-// Temporary fix for LiveData.switchMap but (currently breaks Nullability)
-// https://issuetracker.google.com/issues/132923666
-@Deprecated("Use Transformations.switchMap instead")
-inline fun <X, Y> LiveData<X>.switchMap(
-    crossinline transform: (X?) -> LiveData<Y>
-): LiveData<Y> = Transformations.switchMap(this) { transform(it) }
-
 /** Observe only non-null values */
 fun <T> LiveData<T>.observeNonNull(owner: LifecycleOwner, onChanged: (t: T) -> Unit) {
     observe(owner, Observer { it?.let(onChanged) })
@@ -138,3 +124,5 @@ fun <T> createPastValueLiveData(ld: LiveData<T>) = MediatorLiveData<Pair<T?, T?>
         pastValue = it
     }
 }
+
+fun <T> LiveData<T>.withPastValue() = createPastValueLiveData(this)

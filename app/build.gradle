@@ -7,6 +7,15 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
@@ -29,7 +38,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
-    kapt("androidx.lifecycle:lifecycle-common-java8:2.2.0") {
-        exclude group: 'com.android.support'
-    }
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.2.0'
+//    kapt("androidx.lifecycle:lifecycle-common-java8:2.2.0") // Do not use, uses 2.0.0 LiveData without constructor
+
+    testImplementation "junit:junit:4.13"
+    testImplementation "io.mockk:mockk:1.10.0"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+
 }
