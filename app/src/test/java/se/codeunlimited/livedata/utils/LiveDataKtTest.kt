@@ -71,9 +71,9 @@ class LiveDataKtTest {
     }
 
     @Test
-    fun `getDistinct emits first value`() {
+    fun `distinctBy emits first value`() {
         val a = MutableLiveData<Int>()
-        val distinct = a.getDistinct { _, _ -> false }
+        val distinct = a.distinctBy { _, _ -> false }
 
         distinct.observeForTesting { assertEquals(null, it) }
 
@@ -83,15 +83,15 @@ class LiveDataKtTest {
 
         // Initial value is emitted
         MutableLiveData(666)
-            .getDistinct { _, _ -> false }
+            .distinctBy { _, _ -> false }
             .observeForTesting { assertEquals(666, it) }
     }
 
     @Test
-    fun `getDistinct emits if predicate is true`() {
+    fun `distinctBy emits if predicate is true`() {
         val listRef = emptyList<Int>()
         val a = MutableLiveData(listRef)
-        val distinct = a.getDistinct { old, new -> old != new } // distinctUntilChanged
+        val distinct = a.distinctBy { old, new -> old != new } // distinctUntilChanged
 
         distinct.observeForTesting { assertEquals(listRef, it) }
 
@@ -104,9 +104,9 @@ class LiveDataKtTest {
     }
 
     @Test
-    fun `withPastValue emits both previous and new value`() {
+    fun `withPrevValue emits both previous and new value`() {
         val a = MutableLiveData<Int>()
-        val aChanges = a.withPastValue()
+        val aChanges = a.withPrevValue()
 
         aChanges.observeForTesting { assertEquals(null, it) }
 
