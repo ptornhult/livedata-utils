@@ -104,6 +104,18 @@ class LiveDataKtTest {
     }
 
     @Test
+    fun `mapNotNull emits if predicate is not null`() {
+        val liveData = MutableLiveData(1)
+        val notNullLiveData = liveData.mapNotNull { if (it == 0) null else "$it" }
+
+        notNullLiveData.observeForTesting { assertEquals("1", it) }
+        liveData.value = 0
+        notNullLiveData.observeForTesting { assertEquals("1", it) }
+        liveData.value = 10
+        notNullLiveData.observeForTesting { assertEquals("10", it) }
+    }
+
+    @Test
     fun `withPrevValue emits both previous and new value`() {
         val a = MutableLiveData<Int>()
         val aChanges = a.withPrevValue()

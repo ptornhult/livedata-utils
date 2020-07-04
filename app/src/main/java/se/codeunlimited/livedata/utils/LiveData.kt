@@ -92,6 +92,20 @@ fun <T> createPrevValueLiveData(ld: LiveData<T>): LiveData<Pair<T?, T?>> =
         }
     }
 
+/**
+ * Allows you to map LiveData values without having to deal with nullability. Ex:
+ * val games = MutableLiveData<List<Game>>()
+ * val nullableLastGame: LiveData<Game?> = game.map { game.firstOrNull() }
+ * val lastGame: LiveData<Game> = game.mapNotNull { game.firstOrNull() }
+ */
+fun <T, K> LiveData<T>.mapNotNull(mapFun: (T) -> K?): LiveData<K> {
+    val mediatorLiveData = MediatorLiveData<K>()
+    mediatorLiveData.addSource(this) {
+        mapFun(it)?.let { nonNullValue -> mediatorLiveData.value = nonNullValue }
+    }
+    return mediatorLiveData
+}
+
 /** See #createPrevValueLiveData **/
 fun <T> LiveData<T>.withPrevValue(): LiveData<Pair<T?, T?>> = createPrevValueLiveData(this)
 
